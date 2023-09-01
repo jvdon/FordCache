@@ -1,10 +1,12 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
 
 import 'package:http/http.dart' as http;
-import 'package:sprint_ford/classes/user.dart';
-import 'package:sprint_ford/main.dart';
-import 'package:sprint_ford/partials/customInput.dart';
+import 'package:FordCache/classes/user.dart';
+import 'package:FordCache/main.dart';
+import 'package:FordCache/partials/customInput.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -14,7 +16,7 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
-  bool login(String username, String password) {
+  Future<bool> login(String username, String password) async {
     try {
       // http.Response req = await http.post(Uri.parse("http://localhost:8000"),
       //     body:
@@ -60,11 +62,11 @@ class _LoginPageState extends State<LoginPage> {
           Padding(
             padding: const EdgeInsets.all(5),
             child: ElevatedButton(
-              onPressed: () {
+              onPressed: () async {
                 print(
                     "${usernameController.text} - ${passwordController.text}");
-                bool res =
-                    login(usernameController.text, passwordController.text);
+                bool res = await login(
+                    usernameController.text, passwordController.text);
                 setState(() {
                   if (res) {
                     Navigator.of(context).pushReplacement(MaterialPageRoute(

@@ -1,8 +1,12 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
-import 'package:sprint_ford/classes/qrcode.dart';
-import 'package:sprint_ford/classes/user.dart';
-import 'package:sprint_ford/partials/customInput.dart';
+import 'package:FordCache/classes/qrcode.dart';
+import 'package:FordCache/classes/user.dart';
+import 'package:FordCache/partials/customInput.dart';
+
+import 'package:http/http.dart' as http;
 
 import 'package:latlong2/latlong.dart';
 
@@ -14,12 +18,12 @@ class SignupPage extends StatefulWidget {
 }
 
 class _SignupPageState extends State<SignupPage> {
-  bool signup(String username, String password) {
+  Future<bool> signup(String username, String password) async {
     try {
-      // http.Response req = await http.post(Uri.parse("http://localhost:8000"),
-      //     body:
-      //         "username=$username&password=${base64.encode(utf8.encode(password))}");
-      // print(req.body);
+      http.Response req = await http.post(Uri.parse("http://localhost:8000"),
+          body:
+              "username=$username&password=${base64.encode(utf8.encode(password))}");
+      print(req.body);
 
       User user = User(
         userId: 0,
@@ -28,7 +32,7 @@ class _SignupPageState extends State<SignupPage> {
         session: "0x01234",
       );
 
-      var myBox = Hive.box("localStorage");
+      var myBox = Hive.box("session");
 
       myBox.put("user", user.toMap());
 
@@ -67,15 +71,15 @@ class _SignupPageState extends State<SignupPage> {
             Padding(
               padding: const EdgeInsets.all(5),
               child: ElevatedButton(
-                onPressed: () {
+                onPressed: () async {
                   print(
                       "${usernameController.text} - ${passwordController.text}");
-                  bool res =
-                      signup(usernameController.text, passwordController.text);
+                  bool res = await signup(
+                      usernameController.text, passwordController.text);
                   setState(() {
                     result = (res == true)
-                        ? "Logged in successfully"
-                        : "Unable to login";
+                        ? "Registered successfully"
+                        : "Unable to sign-up";
                   });
                 },
                 child: const Text("Login"),

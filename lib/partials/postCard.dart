@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:sprint_ford/classes/qrcode.dart';
+import 'package:FordCache/classes/qrcode.dart';
 
 class QRCodeCard extends StatefulWidget {
   final QRCode qrCode;

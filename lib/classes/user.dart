@@ -1,4 +1,4 @@
-import 'package:sprint_ford/classes/qrcode.dart';
+import 'package:FordCache/classes/qrcode.dart';
 
 import 'package:latlong2/latlong.dart';
 
@@ -40,12 +40,32 @@ class User {
     this.bannerPicture = data["bannerPicture"];
   }
 
-  List<QRCode> getPosts() {
+  List<QRCode> getCodes() {
     return [
-      QRCode(id: 1, tile: "tile", user: this, data: "12/05/01", location: LatLng(10, 20)),
-      QRCode(id: 2, tile: "tile", user: this, data: "12/05/02", location: LatLng(10, 20)),
-      QRCode(id: 3, tile: "tile", user: this, data: "12/05/03", location: LatLng(10, 20)),
-      QRCode(id: 4, tile: "tile", user: this, data: "12/05/04", location: LatLng(10, 20)),
+      QRCode(
+          id: 1,
+          tile: "tile",
+          user: this,
+          data: "12/05/01",
+          location: LatLng(10, 20)),
+      QRCode(
+          id: 2,
+          tile: "tile",
+          user: this,
+          data: "12/05/02",
+          location: LatLng(20, 30)),
+      QRCode(
+          id: 3,
+          tile: "tile",
+          user: this,
+          data: "12/05/03",
+          location: LatLng(30, 40)),
+      QRCode(
+          id: 4,
+          tile: "tile",
+          user: this,
+          data: "12/05/04",
+          location: LatLng(40, 50)),
     ];
   }
 }

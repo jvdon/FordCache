@@ -1,6 +1,6 @@
 {
-    "name": "sprint_ford",
-    "short_name": "sprint_ford",
+    "name": "FordCache",
+    "short_name": "FordCache",
     "start_url": ".",
     "display": "standalone",
     "background_color": "#0175C2",
