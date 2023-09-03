@@ -8,6 +8,7 @@ import 'package:sprint_ford/pages/login/loginPage.dart';
 import 'package:sprint_ford/pages/mapPage.dart';
 import 'package:sprint_ford/pages/profilePage.dart';
 import 'package:sprint_ford/pages/scanPage.dart';
+import 'package:sprint_ford/pages/shopPage.dart';
 
 void main() async {
   Hive.init(Directory.systemTemp.path);
@@ -79,7 +80,7 @@ class _AppState extends State<App> {
     const HomePage(),
     const MapPage(),
     const ScanPage(),
-    const Placeholder(),
+    const ShopPage(),
   ];
 
   @override
