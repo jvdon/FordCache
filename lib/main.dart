@@ -2,11 +2,12 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
-import 'package:FordCache/classes/user.dart';
-import 'package:FordCache/pages/homePage.dart';
-import 'package:FordCache/pages/login/loginPage.dart';
-import 'package:FordCache/pages/mapPage.dart';
-import 'package:FordCache/pages/scanPage.dart';
+import 'package:sprint_ford/classes/user.dart';
+import 'package:sprint_ford/pages/homePage.dart';
+import 'package:sprint_ford/pages/login/loginPage.dart';
+import 'package:sprint_ford/pages/mapPage.dart';
+import 'package:sprint_ford/pages/profilePage.dart';
+import 'package:sprint_ford/pages/scanPage.dart';
 
 void main() async {
   Hive.init(Directory.systemTemp.path);
@@ -16,6 +17,7 @@ void main() async {
 }
 
 late User? user = null;
+Color bgColor = Color.fromRGBO(17, 43, 78, 1);
 
 class MyApp extends StatefulWidget {
   const MyApp({super.key});
@@ -35,36 +37,110 @@ class _MyAppState extends State<MyApp> {
     user = (userMap != null) ? User.fromMap(userMap) : null;
   }
 
-  int curIndex = 0;
-  List<Widget> pages = [HomePage(), MapPage(), ScanPage()];
-
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-        theme: ThemeData(
-          scaffoldBackgroundColor: const Color.fromRGBO(17, 43, 78, 1),
-          primarySwatch: Colors.deepPurple,
-          bottomNavigationBarTheme: const BottomNavigationBarThemeData(
-            unselectedItemColor: Colors.black45,
-            selectedItemColor: Colors.deepPurple,
-          ),
-          textTheme: const TextTheme(
-            displayLarge: TextStyle(color: Colors.white),
-            displayMedium: TextStyle(color: Colors.white),
-            displaySmall: TextStyle(color: Colors.white),
-            bodySmall: TextStyle(color: Colors.white),
-            bodyMedium: TextStyle(color: Colors.white),
-            bodyLarge: TextStyle(color: Colors.white),
-            titleSmall: TextStyle(color: Colors.white),
-            titleLarge: TextStyle(color: Colors.white),
-            titleMedium: TextStyle(color: Colors.white),
-          ),
+      debugShowCheckedModeBanner: false,
+      theme: ThemeData(
+        scaffoldBackgroundColor: bgColor,
+        appBarTheme: AppBarTheme(
+          shape: const RoundedRectangleBorder(
+              side: BorderSide(color: Colors.black26),
+              borderRadius: BorderRadius.all(Radius.circular(20))),
+          backgroundColor: bgColor,
         ),
-        home: (user == null) ? LoginPage() : App());
+        primarySwatch: Colors.deepPurple,
+        bottomNavigationBarTheme: const BottomNavigationBarThemeData(
+          unselectedItemColor: Colors.black45,
+          selectedItemColor: Colors.deepPurple,
+        ),
+        textTheme: Theme.of(context).textTheme.apply(
+              bodyColor: Colors.white,
+              displayColor: Colors.white,
+            ),
+      ),
+      home: (user == null) ? LoginPage() : App(),
+    );
   }
+}
 
-  Widget App() {
+class App extends StatefulWidget {
+  App({super.key});
+
+  @override
+  State<App> createState() => _AppState();
+}
+
+class _AppState extends State<App> {
+  int curIndex = 0;
+
+  final List<Widget> pages = [
+    HomePage(),
+    MapPage(),
+    ScanPage(),
+    Placeholder(),
+  ];
+
+  @override
+  Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        title: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Container(
+              child: const Row(
+                children: [
+                  CircleAvatar(
+                    foregroundImage: AssetImage("assets/images/logo.png"),
+                    radius: 20,
+                  ),
+                  SizedBox(
+                    width: 20,
+                  ),
+                  Text(
+                    "Ford Cache",
+                    style: TextStyle(fontSize: 32, color: Colors.white),
+                  )
+                ],
+              ),
+            ),
+            GestureDetector(
+              onTap: () {
+                showModalBottomSheet(
+                  backgroundColor: bgColor,
+                  shape: const RoundedRectangleBorder(
+                    borderRadius: BorderRadius.only(
+                        topLeft: Radius.circular(30),
+                        topRight: Radius.circular(30)),
+                  ),
+                  context: context,
+                  builder: (context) {
+                    return SizedBox(
+                      height: 300,
+                      child: Column(
+                        children: [
+                          ListTile(
+                            style: ListTileStyle.list,
+                            leading: CircleAvatar(
+                              foregroundImage: AssetImage(user!.profilePicture),
+                            ),
+                            title: Text(user!.username),
+                            subtitle: Text(user!.email),
+                          ),
+                        ],
+                      ),
+                    );
+                  },
+                );
+              },
+              child: CircleAvatar(
+                foregroundImage: AssetImage(user!.profilePicture),
+              ),
+            ),
+          ],
+        ),
+      ),
       body: pages[curIndex],
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: curIndex,
@@ -96,12 +172,6 @@ class _MyAppState extends State<MyApp> {
                 size: 24,
               ),
               label: "Shop"),
-          BottomNavigationBarItem(
-              icon: Icon(
-                Icons.person,
-                size: 24,
-              ),
-              label: "Perfil"),
         ],
       ),
     );

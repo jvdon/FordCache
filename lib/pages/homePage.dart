@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
-import 'package:FordCache/classes/qrcode.dart';
-import 'package:FordCache/classes/user.dart';
+import 'package:sprint_ford/classes/qrcode.dart';
+import 'package:sprint_ford/classes/user.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -27,8 +27,6 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
-    print(qrcodes.length);
-
     return ListView.builder(
       itemCount: qrcodes.length,
       itemBuilder: (context, index) {
@@ -39,8 +37,8 @@ class _HomePageState extends State<HomePage> {
               leading: CircleAvatar(
                   foregroundImage: AssetImage(qrCode.user.profilePicture)),
               title: Text(qrCode.tile),
-              subtitle: Text(
-                  "${qrCode.location.latitude}° - ${qrCode.location.longitude}°  ${qrCode.data}"),
+              subtitle: Text(qrCode.data),
+              trailing: Text(qrCode.points.toString()),
             )
           ],
         );

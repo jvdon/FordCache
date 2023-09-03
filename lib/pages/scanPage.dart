@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
+import 'package:sprint_ford/partials/customButton.dart';
 
 class ScanPage extends StatefulWidget {
   const ScanPage({super.key});
@@ -23,19 +24,27 @@ class _ScanPageState extends State<ScanPage> {
         children: [
           Expanded(
             flex: 6,
-            child: Center(child: Text((_scanBarcode.isEmpty) ? "The result will be shown here" : _scanBarcode)),
+            child: Center(
+              child: Text(
+                (_scanBarcode.isEmpty)
+                    ? "Escaneie um QRCode para ganhar pontos!"
+                    : _scanBarcode,
+              ),
+            ),
           ),
           Expanded(
             flex: 1,
             child: SizedBox(
               width: 250,
-              child: ElevatedButton(
-              child: Text("Scan"),
-              onPressed: () {
-                scanQR();
-              },
+              child: CustomButton(
+                text: "Scan",
+                textSize: 32,
+                cb: () {
+                  scanQR();
+                },
+              ),
             ),
-          ),)
+          )
         ],
       ),
     );

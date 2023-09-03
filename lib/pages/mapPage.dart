@@ -3,8 +3,8 @@ import 'package:flutter_map/flutter_map.dart';
 import 'package:hive/hive.dart';
 
 import 'package:latlong2/latlong.dart';
-import 'package:FordCache/classes/qrcode.dart';
-import 'package:FordCache/classes/user.dart';
+import 'package:sprint_ford/classes/qrcode.dart';
+import 'package:sprint_ford/classes/user.dart';
 
 class MapPage extends StatefulWidget {
   const MapPage({super.key});
@@ -21,7 +21,6 @@ class _MapPageState extends State<MapPage> {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
 
     final box = Hive.box("session");
@@ -35,11 +34,30 @@ class _MapPageState extends State<MapPage> {
         builder: (context) {
           return GestureDetector(
             onTap: () {
-              ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                  content: Text(
-                      "${qrcode.location.latitude}° - ${qrcode.location.longitude}°  ${qrcode.data}")));
+              showDialog(
+                context: context,
+                builder: (context) {
+                  return Dialog(
+                    shape: const RoundedRectangleBorder(
+                        borderRadius: BorderRadius.all(Radius.circular(45))),
+                    backgroundColor: const Color.fromRGBO(17, 43, 78, 1),
+                    child: ListTile(
+                      leading: const Icon(
+                        Icons.qr_code,
+                        color: Colors.white,
+                        size: 32,
+                      ),
+                      title: Text(qrcode.tile),
+                      subtitle: Text(qrcode.data),
+                    ),
+                  );
+                },
+              );
             },
-            child: Icon(Icons.qr_code_2),
+            child: const Icon(
+              Icons.qr_code_2,
+              color: Colors.white,
+            ),
           );
         },
       ));
@@ -49,23 +67,27 @@ class _MapPageState extends State<MapPage> {
   @override
   Widget build(BuildContext context) {
     print(qrcodes.length);
-    return FlutterMap(
-      options: MapOptions(
+    return Scaffold(
+      body: FlutterMap(
+        options: MapOptions(
           center: const LatLng(-14.2400732, -53.1805017),
-          zoom: 8,
+          zoom: 10,
           maxBounds: LatLngBounds(
             const LatLng(-90, -180),
             const LatLng(90, 180),
-          )),
-      children: [
-        TileLayer(
-          urlTemplate: 'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
-          userAgentPackageName: 'com.zeyk.Gs',
+          ),
         ),
-        MarkerLayer(
-          markers: markers,
-        )
-      ],
+        children: [
+          TileLayer(
+            urlTemplate: 'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
+            userAgentPackageName: 'com.zeyk.Gs',
+            // tileBuilder: darkModeTileBuilder,
+          ),
+          MarkerLayer(
+            markers: markers,
+          )
+        ],
+      ),
     );
   }
 }
