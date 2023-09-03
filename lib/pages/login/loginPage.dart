@@ -31,6 +31,7 @@ class _LoginPageState extends State<LoginPage> {
         userId: 0,
         username: "jvdon",
         email: "joaov@gmail.com",
+        points: 5500,
         session: "0x01234",
       );
 

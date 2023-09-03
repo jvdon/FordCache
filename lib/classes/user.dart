@@ -7,6 +7,7 @@ class User {
   late String username;
   late String email;
   late String session;
+  late int points;
   late String profilePicture;
   late String bannerPicture;
 
@@ -14,6 +15,7 @@ class User {
     required this.userId,
     required this.username,
     required this.email,
+    required this.points,
     required this.session,
     this.profilePicture = "assets/images/default_user.png",
     this.bannerPicture = "assets/images/default_banner.png",
@@ -24,6 +26,7 @@ class User {
     res["userId"] = this.userId;
     res["username"] = this.username;
     res["email"] = this.email;
+    res["points"] = this.points;
     res["session"] = this.session;
     res["profilePicture"] = this.profilePicture;
     res["bannerPicture"] = this.bannerPicture;
@@ -35,6 +38,7 @@ class User {
     this.userId = data["userId"];
     this.username = data["username"];
     this.email = data["email"];
+    this.points = data["points"];
     this.session = data["session"];
     this.profilePicture = data["profilePicture"];
     this.bannerPicture = data["bannerPicture"];

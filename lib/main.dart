@@ -33,6 +33,7 @@ class _MyAppState extends State<MyApp> {
     super.initState();
 
     final box = Hive.box("session");
+
     final userMap = box.get("user");
     user = (userMap != null) ? User.fromMap(userMap) : null;
   }
@@ -59,7 +60,7 @@ class _MyAppState extends State<MyApp> {
               displayColor: Colors.white,
             ),
       ),
-      home: (user == null) ? LoginPage() : App(),
+      home: (user == null) ? const LoginPage() : App(),
     );
   }
 }
@@ -75,10 +76,10 @@ class _AppState extends State<App> {
   int curIndex = 0;
 
   final List<Widget> pages = [
-    HomePage(),
-    MapPage(),
-    ScanPage(),
-    Placeholder(),
+    const HomePage(),
+    const MapPage(),
+    const ScanPage(),
+    const Placeholder(),
   ];
 
   @override
@@ -116,19 +117,26 @@ class _AppState extends State<App> {
                   ),
                   context: context,
                   builder: (context) {
-                    return SizedBox(
-                      height: 300,
-                      child: Column(
-                        children: [
-                          ListTile(
-                            style: ListTileStyle.list,
-                            leading: CircleAvatar(
-                              foregroundImage: AssetImage(user!.profilePicture),
-                            ),
-                            title: Text(user!.username),
-                            subtitle: Text(user!.email),
+                    return Container(
+                      height: 200,
+                      decoration: BoxDecoration(
+                        color: bgColor,
+                        image: DecorationImage(
+                            image: AssetImage(user!.bannerPicture),
+                            alignment: Alignment.topCenter,
+                            fit: BoxFit.contain),
+                      ),
+                      child: Container(
+                        color: Colors.black.withOpacity(0.6),
+                        child: ListTile(
+                          style: ListTileStyle.list,
+                          leading: CircleAvatar(
+                            foregroundImage: AssetImage(user!.profilePicture),
                           ),
-                        ],
+                          title: Text(user!.username),
+                          subtitle: Text(user!.email),
+                          trailing: Text(user!.points.toString()),
+                        ),
                       ),
                     );
                   },
