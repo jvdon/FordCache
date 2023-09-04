@@ -6,7 +6,6 @@ class User {
   late int userId;
   late String username;
   late String email;
-  late String session;
   late int points;
   late String profilePicture;
   late String bannerPicture;
@@ -16,7 +15,6 @@ class User {
     required this.username,
     required this.email,
     required this.points,
-    required this.session,
     this.profilePicture = "assets/images/default_user.png",
     this.bannerPicture = "assets/images/default_banner.png",
   });
@@ -27,10 +25,7 @@ class User {
     res["username"] = this.username;
     res["email"] = this.email;
     res["points"] = this.points;
-    res["session"] = this.session;
     res["profilePicture"] = this.profilePicture;
-    res["bannerPicture"] = this.bannerPicture;
-
     return res;
   }
 
@@ -39,9 +34,9 @@ class User {
     this.username = data["username"];
     this.email = data["email"];
     this.points = data["points"];
-    this.session = data["session"];
-    this.profilePicture = data["profilePicture"];
-    this.bannerPicture = data["bannerPicture"];
+    this.profilePicture =
+        "assets/images/default_user.png"; //data["profilePicture"];
+    this.bannerPicture = "assets/images/default_banner.png";
   }
 
   List<QRCode> getCodes() {

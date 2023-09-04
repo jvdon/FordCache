@@ -25,7 +25,9 @@ class _MapPageState extends State<MapPage> {
 
     final box = Hive.box("session");
     final userMap = box.get("user");
+
     user = (userMap != null) ? User.fromMap(userMap) : null;
+
     qrcodes = user!.getCodes();
 
     for (var qrcode in qrcodes) {
@@ -56,7 +58,7 @@ class _MapPageState extends State<MapPage> {
             },
             child: const Icon(
               Icons.qr_code_2,
-              color: Colors.white,
+              color: Colors.black,
             ),
           );
         },

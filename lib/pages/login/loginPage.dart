@@ -22,24 +22,25 @@ class _LoginPageState extends State<LoginPage> {
     bool ok = false;
 
     try {
-      // http.Response req = await http.post(Uri.parse("http://localhost:8000"),
-      //     body:
-      //         "username=$username&password=${base64.encode(utf8.encode(password))}");
-      // print(req.body);
-
-      User user = User(
-        userId: 0,
-        username: "jvdon",
-        email: "joaov@gmail.com",
-        points: 5500,
-        session: "0x01234",
+      http.Response req = await http.post(
+        Uri.parse("http://localhost:5000/login"),
+        headers: {"Content-Type": "application/json"},
+        body: jsonEncode(
+            <String, String>{"username": username, "password": password}),
       );
 
-      var myBox = Hive.box("session");
+      if (req.statusCode == 200) {
+        print(req.body);
+        Map<String, dynamic> resJson = jsonDecode(req.body);
 
-      myBox.put("user", user.toMap());
+        User user = User.fromMap(resJson);
 
-      ok = true;
+        var myBox = Hive.box("session");
+
+        myBox.put("user", user.toMap());
+
+        ok = true;
+      }
     } catch (e) {
       print(e);
       ok = false;

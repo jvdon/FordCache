@@ -34,7 +34,6 @@ class _MyAppState extends State<MyApp> {
     super.initState();
 
     final box = Hive.box("session");
-
     final userMap = box.get("user");
     user = (userMap != null) ? User.fromMap(userMap) : null;
   }

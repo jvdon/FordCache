@@ -20,28 +20,29 @@ class SignupPage extends StatefulWidget {
 }
 
 class _SignupPageState extends State<SignupPage> {
-  void signup(String username, String password) async {
+  void signup(String username, String email, String password) async {
     bool ok = false;
 
     try {
-      // http.Response req = await http.post(Uri.parse("http://localhost:8000"),
-      //     body:
-      //         "username=$username&password=${base64.encode(utf8.encode(password))}");
-      // print(req.body);
-
-      User user = User(
-        userId: 0,
-        username: "jvdon",
-        email: "joaov@gmail.com",
-        points: 5500,
-        session: "0x01234",
+      http.Response req = await http.post(
+        Uri.parse("http://localhost:5000/signup"),
+        headers: {"Content-Type": "application/json"},
+        body: jsonEncode(
+            <String, String>{"username": username, "password": password}),
       );
+      print(req.body);
 
-      var myBox = Hive.box("session");
+      if (req.statusCode == 200) {
+        Map<String, dynamic> resJson = jsonDecode(req.body);
 
-      myBox.put("user", user.toMap());
+        User user = User.fromMap(resJson);
 
-      ok = true;
+        var myBox = Hive.box("session");
+
+        myBox.put("user", user.toMap());
+
+        ok = true;
+      }
     } catch (e) {
       print(e);
       ok = false;
@@ -66,6 +67,7 @@ class _SignupPageState extends State<SignupPage> {
   @override
   Widget build(BuildContext context) {
     TextEditingController usernameController = TextEditingController();
+    TextEditingController emailController = TextEditingController();
     TextEditingController passwordController = TextEditingController();
 
     return Scaffold(
@@ -96,6 +98,10 @@ class _SignupPageState extends State<SignupPage> {
                     hintText: "USERNAME",
                     obscure: false),
                 CustomInput(
+                    controller: emailController,
+                    hintText: "E-Mail",
+                    obscure: false),
+                CustomInput(
                     controller: passwordController,
                     hintText: "PASSWORD",
                     obscure: true),
@@ -108,7 +114,10 @@ class _SignupPageState extends State<SignupPage> {
                   child: CustomButton(
                     text: "Signup",
                     textSize: 32,
-                    cb: () {},
+                    cb: () {
+                      signup(usernameController.text, emailController.text,
+                          passwordController.text);
+                    },
                   ),
                 ),
               ],
