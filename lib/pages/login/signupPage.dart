@@ -5,12 +5,15 @@ import 'package:hive/hive.dart';
 import 'package:sprint_ford/classes/qrcode.dart';
 import 'package:sprint_ford/classes/user.dart';
 import 'package:sprint_ford/main.dart';
+import 'package:sprint_ford/pages/login/loginPage.dart';
 import 'package:sprint_ford/partials/customButton.dart';
 import 'package:sprint_ford/partials/customInput.dart';
 
 import 'package:http/http.dart' as http;
 
 import 'package:latlong2/latlong.dart';
+
+import 'package:sprint_ford/classes/conf.dart' as conf;
 
 class SignupPage extends StatefulWidget {
   const SignupPage({super.key});
@@ -22,22 +25,21 @@ class SignupPage extends StatefulWidget {
 class _SignupPageState extends State<SignupPage> {
   void signup(String username, String email, String password) async {
     bool ok = false;
+    var myBox = Hive.box("session");
 
     try {
       http.Response req = await http.post(
-        Uri.parse("http://localhost:5000/signup"),
+        Uri.parse("${conf.backUrl}/signup"),
         headers: {"Content-Type": "application/json"},
         body: jsonEncode(
             <String, String>{"username": username, "password": password}),
       );
-      print(req.body);
 
       if (req.statusCode == 200) {
         Map<String, dynamic> resJson = jsonDecode(req.body);
+        print(resJson);
 
         User user = User.fromMap(resJson);
-
-        var myBox = Hive.box("session");
 
         myBox.put("user", user.toMap());
 
@@ -81,7 +83,7 @@ class _SignupPageState extends State<SignupPage> {
               children: [
                 CircleAvatar(
                   foregroundImage: AssetImage("assets/images/logo.png"),
-                  radius: 160,
+                  radius: 80,
                 ),
                 Text(
                   "Ford Cache",
@@ -120,6 +122,16 @@ class _SignupPageState extends State<SignupPage> {
                     },
                   ),
                 ),
+                CustomButton(
+                  text: "Already Signed-up? Login!",
+                  textSize: 16,
+                  cb: () =>
+                      Navigator.of(context).pushReplacement(MaterialPageRoute(
+                    builder: (context) {
+                      return LoginPage();
+                    },
+                  )),
+                )
               ],
             ),
           ],

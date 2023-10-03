@@ -10,6 +10,8 @@ import 'package:sprint_ford/pages/login/signupPage.dart';
 import 'package:sprint_ford/partials/customButton.dart';
 import 'package:sprint_ford/partials/customInput.dart';
 
+import 'package:sprint_ford/classes/conf.dart' as conf;
+
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
 
@@ -23,19 +25,16 @@ class _LoginPageState extends State<LoginPage> {
 
     try {
       http.Response req = await http.post(
-        Uri.parse("http://localhost:5000/login"),
+        Uri.parse("${conf.backUrl}/login"),
         headers: {"Content-Type": "application/json"},
         body: jsonEncode(
             <String, String>{"username": username, "password": password}),
       );
 
       if (req.statusCode == 200) {
-        print(req.body);
-        Map<String, dynamic> resJson = jsonDecode(req.body);
-
-        User user = User.fromMap(resJson);
-
         var myBox = Hive.box("session");
+        var resJson = json.decode(req.body);
+        User user = User.fromMap(resJson);
 
         myBox.put("user", user.toMap());
 
@@ -76,13 +75,16 @@ class _LoginPageState extends State<LoginPage> {
               children: [
                 CircleAvatar(
                   foregroundImage: AssetImage("assets/images/logo.png"),
-                  radius: 160,
+                  radius: 80,
                 ),
                 Text(
                   "Ford Cache",
                   style: TextStyle(fontSize: 32, color: Colors.white),
                 )
               ],
+            ),
+            SizedBox(
+              height: 50,
             ),
             Column(
               crossAxisAlignment: CrossAxisAlignment.center,

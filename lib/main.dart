@@ -5,10 +5,10 @@ import 'package:hive/hive.dart';
 import 'package:sprint_ford/classes/user.dart';
 import 'package:sprint_ford/pages/homePage.dart';
 import 'package:sprint_ford/pages/login/loginPage.dart';
-import 'package:sprint_ford/pages/mapPage.dart';
-import 'package:sprint_ford/pages/profilePage.dart';
+import 'package:sprint_ford/pages/login/signupPage.dart';
 import 'package:sprint_ford/pages/scanPage.dart';
 import 'package:sprint_ford/pages/shopPage.dart';
+import 'package:sprint_ford/partials/customButton.dart';
 
 void main() async {
   Hive.init(Directory.systemTemp.path);
@@ -34,7 +34,9 @@ class _MyAppState extends State<MyApp> {
     super.initState();
 
     final box = Hive.box("session");
+
     final userMap = box.get("user");
+
     user = (userMap != null) ? User.fromMap(userMap) : null;
   }
 
@@ -77,7 +79,7 @@ class _AppState extends State<App> {
 
   final List<Widget> pages = [
     const HomePage(),
-    const MapPage(),
+    // const MapPage(),
     const ScanPage(),
     const ShopPage(),
   ];
@@ -117,6 +119,11 @@ class _AppState extends State<App> {
                   ),
                   context: context,
                   builder: (context) {
+                    final box = Hive.box("session");
+
+                    final userMap = box.get("user");
+
+                    user = (userMap != null) ? User.fromMap(userMap) : null;
                     return Container(
                       height: 200,
                       decoration: BoxDecoration(
@@ -128,14 +135,39 @@ class _AppState extends State<App> {
                       ),
                       child: Container(
                         color: Colors.black.withOpacity(0.6),
-                        child: ListTile(
-                          style: ListTileStyle.list,
-                          leading: CircleAvatar(
-                            foregroundImage: AssetImage(user!.profilePicture),
-                          ),
-                          title: Text(user!.username),
-                          subtitle: Text(user!.email),
-                          trailing: Text(user!.points.toString()),
+                        child: Column(
+                          children: [
+                            ListTile(
+                              style: ListTileStyle.list,
+                              leading: CircleAvatar(
+                                foregroundImage:
+                                    AssetImage(user!.profilePicture),
+                              ),
+                              title: Text(user!.username),
+                              subtitle: Text(user!.email),
+                              trailing: Text(user!.points.toString()),
+                            ),
+                            const SizedBox(
+                              height: 15,
+                            ),
+                            SizedBox(
+                              width: 200,
+                              height: 80,
+                              child: CustomButton(
+                                text: "Logout",
+                                textSize: 32,
+                                cb: () {
+                                  box.delete("user");
+                                  Navigator.of(context)
+                                      .pushReplacement(MaterialPageRoute(
+                                    builder: (context) {
+                                      return LoginPage();
+                                    },
+                                  ));
+                                },
+                              ),
+                            )
+                          ],
                         ),
                       ),
                     );
@@ -162,12 +194,6 @@ class _AppState extends State<App> {
                 size: 24,
               ),
               label: "Home"),
-          BottomNavigationBarItem(
-              icon: Icon(
-                Icons.map_outlined,
-                size: 24,
-              ),
-              label: "Por Perto"),
           BottomNavigationBarItem(
               icon: Icon(
                 Icons.camera_alt,

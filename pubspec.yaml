@@ -38,6 +38,7 @@ dependencies:
   hive: ^2.2.3
   flutter_map: ^5.0.0
   flutter_barcode_scanner: ^2.0.0
+  qr_flutter: ^4.1.0
 
 
 

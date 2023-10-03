@@ -1,12 +1,15 @@
-import 'package:sprint_ford/classes/qrcode.dart';
+import 'dart:convert';
 
-import 'package:latlong2/latlong.dart';
+import 'package:sprint_ford/classes/qrcode.dart';
+import 'package:http/http.dart' as http;
+import 'package:sprint_ford/classes/conf.dart' as conf;
 
 class User {
   late int userId;
   late String username;
   late String email;
   late int points;
+  late List codes;
   late String profilePicture;
   late String bannerPicture;
 
@@ -14,6 +17,7 @@ class User {
     required this.userId,
     required this.username,
     required this.email,
+    this.codes = const [],
     required this.points,
     this.profilePicture = "assets/images/default_user.png",
     this.bannerPicture = "assets/images/default_banner.png",
@@ -24,6 +28,7 @@ class User {
     res["userId"] = this.userId;
     res["username"] = this.username;
     res["email"] = this.email;
+    res["codes"] = this.codes;
     res["points"] = this.points;
     res["profilePicture"] = this.profilePicture;
     return res;
@@ -33,42 +38,22 @@ class User {
     this.userId = data["userId"];
     this.username = data["username"];
     this.email = data["email"];
+    this.codes = data["codes"];
     this.points = data["points"];
     this.profilePicture =
         "assets/images/default_user.png"; //data["profilePicture"];
     this.bannerPicture = "assets/images/default_banner.png";
   }
 
-  List<QRCode> getCodes() {
-    return [
-      QRCode(
-          id: 1,
-          tile: "tile",
-          points: 50,
-          user: this,
-          data: "12/05/01",
-          location: LatLng(10, 20)),
-      QRCode(
-          id: 2,
-          tile: "tile",
-          points: 35,
-          user: this,
-          data: "12/05/02",
-          location: LatLng(20, 30)),
-      QRCode(
-          id: 3,
-          tile: "tile",
-          points: 14,
-          user: this,
-          data: "12/05/03",
-          location: LatLng(30, 40)),
-      QRCode(
-          id: 12,
-          tile: "tile",
-          points: 5,
-          user: this,
-          data: "12/05/04",
-          location: LatLng(40, 50)),
-    ];
+  Future<List<QRCode>> getCodes() async {
+    List<QRCode> qrs = [];
+    for (var code in codes) {
+      http.Response res =
+          await http.get(Uri.parse("${conf.backUrl}/qrcodes?code=$code"));
+      if (res.statusCode == 200) {
+        qrs.add(QRCode.fromJSON(jsonDecode(res.body)));
+      }
+    }
+    return qrs;
   }
 }

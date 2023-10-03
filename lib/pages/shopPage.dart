@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:sprint_ford/classes/product.dart';
-import 'package:sprint_ford/main.dart';
+
+import 'package:sprint_ford/classes/conf.dart' as conf;
 
 class ShopPage extends StatefulWidget {
   const ShopPage({super.key});

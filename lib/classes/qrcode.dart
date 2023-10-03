@@ -1,20 +1,22 @@
-import 'package:sprint_ford/classes/user.dart';
-
-import 'package:latlong2/latlong.dart';
-
 class QRCode {
-  int id;
-  User user;
-  String tile;
-  int points;
-  String data;
-  LatLng location;
+  late int id;
+  late String title;
+  late String code;
+  late int points;
+  late String data;
 
   QRCode(
       {required this.id,
-      required this.user,
-      required this.tile,
+      required this.title,
+      required this.code,
       required this.points,
-      required this.data,
-      required this.location});
+      required this.data});
+
+  QRCode.fromJSON(Map<String, dynamic> json) {
+    id = json["id"];
+    title = json["title"];
+    code = json["code"];
+    points = json["points"];
+    data = json["data"];
+  }
 }
